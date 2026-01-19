@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>🚍 Расширенная система бронирования автобусов</title>
+<script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gradient-to-br from-green-50 to-green-100 min-h-screen p-4">
+
+<div class="max-w-4xl mx-auto bg-white rounded-xl shadow-lg flex flex-col overflow-hidden">
+  <!-- Заголовок -->
+  <div class="bg-green-600 text-white p-6 text-center">
+    <h1 class="text-3xl font-bold mb-2">🚍 Расширенная система бронирования автобусов</h1>
+  </div>
+
+  <!-- Вкладки -->
+  <div class="flex flex-col md:flex-row md:divide-x divide-gray-300">
+    <!-- Вкладка входа -->
+    <div class="p-4 md:w-1/4">
+      <h2 class="text-xl font-semibold mb-4">Вход</h2>
+      <div class="mb-4">
+        <label class="block mb-1 font-medium">Логин:</label>
+        <input id="loginUser" type="text" class="w-full px-3 py-2 border border-gray-300 rounded" placeholder="Введите логин"/>
+      </div>
+      <div class="mb-4">
+        <label class="block mb-1 font-medium">Пароль:</label>
+        <input id="loginPass" type="password" class="w-full px-3 py-2 border border-gray-300 rounded" placeholder="Введите пароль"/>
+      </div>
+      <button id="loginBtn" class="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded">Войти</button>
+    </div>
+
+    <!-- Бронирование -->
+    <div class="p-4 md:w-1/4" id="bookingSection" style="display:none;">
+      <h2 class="text-xl font-semibold mb-4">Бронирование билета</h2>
+      <div class="mb-3">
+        <label class="block mb-1 font-medium">Имя:</label>
+        <input id="name" type="text" class="w-full px-3 py-2 border border-gray-300 rounded" placeholder="Ваше имя"/>
+      </div>
+      <div class="mb-3">
+        <label class="block mb-1 font-medium">Автобус:</label>
+        <select id="bus" class="w-full px-3 py-2 border border-gray-300 rounded">
+          <option>BUS101</option>
+          <option>BUS202</option>
+          <option>BUS303</option>
+        </select>
+      </div>
+      <div class="mb-3">
+        <label class="block mb-1 font-medium">Мест:</label>
+        <input id="seats" type="number" class="w-full px-3 py-2 border border-gray-300 rounded" placeholder="Количество мест"/>
+      </div>
+      <div class="mb-3">
+        <label class="block mb-1 font-medium">Дата поездки (дд-мм-гггг):</label>
+        <input id="date" type="text" class="w-full px-3 py-2 border border-gray-300 rounded" placeholder="01-01-2024"/>
+      </div>
+      <div class="mb-3">
+        <label class="block mb-1 font-medium">Метод оплаты:</label>
+        <select id="payment" class="w-full px-3 py-2 border border-gray-300 rounded">
+          <option>Наличные</option>
+          <option>UPI</option>
+          <option>Карта</option>
+        </select>
+      </div>
+      <button id="bookBtn" class="w-full bg-green-600 hover:bg-green-700 text-white py-2 px-4 rounded">Забронировать билет</button>
+    </div>
+
+    <!-- Просмотр билетов -->
+    <div class="p-4 md:w-1/4" id="viewSection" style="display:none;">
+      <h2 class="text-xl font-semibold mb-4">Все билеты</h2>
+      <button id="refreshBtn" class="mb-4 bg-gray-600 hover:bg-gray-700 text-white py-2 px-4 rounded">Обновить</button>
+      <textarea id="ticketsArea" class="w-full h-64 p-2 border border-gray-300 rounded" readonly></textarea>
+    </div>
+
+    <!-- Отмена билета -->
+    <div class="p-4 md:w-1/4" id="cancelSection" style="display:none;">
+      <h2 class="text-xl font-semibold mb-4">Отмена билета</h2>
+      <div class="mb-3">
+        <label class="block mb-1 font-medium">ID билета:</label>
+        <input id="cancelId" type="text" class="w-full px-3 py-2 border border-gray-300 rounded" placeholder="Введите ID"/>
+      </div>
+      <button id="cancelBtn" class="w-full bg-red-600 hover:bg-red-700 text-white py-2 px-4 rounded">Отменить билет</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  // Авторизация
+  const loginBtn = document.getElementById('loginBtn');
+  const loginUser = document.getElementById('loginUser');
+  const loginPass = document.getElementById('loginPass');
+
+  const bookingSection = document.getElementById('bookingSection');
+  const viewSection = document.getElementById('viewSection');
+  const cancelSection = document.getElementById('cancelSection');
+
+  loginBtn.addEventListener('click', () => {
+    const user = loginUser.value.trim();
+    const pass = loginPass.value.trim();
+    if (user === 'admin' && pass === '1234') {
+      alert('Успешный вход');
+      bookingSection.style.display = 'block';
+      viewSection.style.display = 'block';
+      cancelSection.style.display = 'block';
+    } else {
+      alert('Неверные данные!');
+    }
+  });
+
+  // Массив билетов
+  const tickets = [];
+
+  // Получение элементов
+  const nameInput = document.getElementById('name');
+  const busSelect = document.getElementById('bus');
+  const seatsInput = document.getElementById('seats');
+  const dateInput = document.getElementById('date');
+  const paymentSelect = document.getElementById('payment');
+  const ticketsArea = document.getElementById('ticketsArea');
+
+  const bookBtn = document.getElementById('bookBtn');
+  const refreshBtn = document.getElementById('refreshBtn');
+  const cancelBtn = document.getElementById('cancelBtn');
+  const cancelIdInput = document.getElementById('cancelId');
+
+  // Генерация уникального ID билета
+  function generateTicketID() {
+    return 'TICK' + Math.floor(Math.random() * 9000 + 1000);
+  }
+
+  // Обновление отображения всех билетов
+  function loadTickets() {
+    ticketsArea.value = '';
+    for (const ticket of tickets) {
+      ticketsArea.value += ticket + '\n----------------------------\n';
+    }
+  }
+
+  // Обработка бронирования
+  document.getElementById('bookBtn').addEventListener('click', () => {
+    const name = nameInput.value.trim();
+    const bus = busSelect.value;
+    const seats = parseInt(seatsInput.value.trim());
+    const date = dateInput.value.trim();
+    const payment = paymentSelect.value;
+
+    if (!name || !seats || !date) {
+      alert('Пожалуйста, заполните все поля!');
+      return;
+    }
+
+    if (isNaN(seats) || seats <= 0) {
+      alert('Некорректное число мест.');
+      return;
+    }
+
+    const totalSeatsBooked = tickets.filter(t => t.includes(`Bus: ${bus}`)).length;
+    const MAX_SEATS = 40;
+
+    if (totalSeatsBooked + seats > MAX_SEATS) {
+      alert('Недостаточно мест на этом автобусе.');
+      return;
+    }
+
+    const fare = seats * 200;
+    const ticketID = generateTicketID();
+
+    const ticket = `Ticket ID: ${ticketID}
+Name: ${name}
+Bus: ${bus}
+Seats: ${seats}
+Date: ${date}
+Payment: ${payment}
+Fare: ₹${fare}`;
+
+    alert('Билет успешно забронирован:\n\n' + ticket);
+    tickets.push(ticket);
+    loadTickets();
+    // Очистка полей
+    nameInput.value = '';
+    seatsInput.value = '';
+    dateInput.value = '';
+  });
+
+  // Обновление списка билетов
+  document.getElementById('refreshBtn').addEventListener('click', loadTickets);
+
+  // Отмена билета
+  document.getElementById('cancelBtn').addEventListener('click', () => {
+    const idToCancel = cancelIdInput.value.trim();
+    const index = tickets.findIndex(t => t.startsWith(`Ticket ID: ${idToCancel}`));
+    if (index !== -1) {
+      tickets.splice(index, 1);
+      alert('Билет отменен.');
+      loadTickets();
+    } else {
+      alert('ID билета не найден.');
+    }
+  });
+</script>
+
+</body>
+</html>
