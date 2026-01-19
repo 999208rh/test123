@@ -1,213 +1,149 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Калькулятор функций</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Expense Tracker</title>
+<script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-gradient-to-br from-blue-50 to-indigo-100 min-h-screen p-4">
-    <div class="max-w-4xl mx-auto bg-white rounded-xl shadow-lg overflow-hidden">
-        <!-- Header -->
-        <div class="bg-indigo-600 text-white p-6">
-            <h1 class="text-3xl font-bold text-center">Калькулятор функций</h1>
-            <p class="text-center mt-2 opacity-90">Вычисление математических функций по заданным условиям</p>
-        </div>
+<body class="bg-gradient-to-br from-green-50 to-green-100 min-h-screen p-4">
 
-        <!-- Main Content -->
-        <div class="p-6">
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                <!-- Input Section -->
-                <div class="space-y-6">
-                    <div class="bg-gray-50 p-6 rounded-lg border border-gray-200">
-                        <h2 class="text-xl font-semibold text-gray-800 mb-4">Ввод данных</h2>
-                        <div class="space-y-4">
-                            <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-1">Значение X</label>
-                                <input type="number" id="x-input" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition" placeholder="Введите значение x">
-                            </div>
-                            <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-1">Значение Y</label>
-                                <input type="number" id="y-input" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition" placeholder="Введите значение y">
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Function Selection -->
-                <div class="space-y-6">
-                    <div class="bg-gray-50 p-6 rounded-lg border border-gray-200">
-                        <h2 class="text-xl font-semibold text-gray-800 mb-4">Выбор функции</h2>
-                        <div class="space-y-3">
-                            <div class="flex items-center">
-                                <input type="radio" id="sinh-x" name="function" value="sinh" class="h-4 w-4 text-indigo-600 focus:ring-indigo-500">
-                                <label for="sinh-x" class="ml-2 text-gray-700">sh(x)</label>
-                            </div>
-                            <div class="flex items-center">
-                                <input type="radio" id="square-x" name="function" value="square" class="h-4 w-4 text-indigo-600 focus:ring-indigo-500">
-                                <label for="square-x" class="ml-2 text-gray-700">x²</label>
-                            </div>
-                            <div class="flex items-center">
-                                <input type="radio" id="exp-x" name="function" value="exp" class="h-4 w-4 text-indigo-600 focus:ring-indigo-500">
-                                <label for="exp-x" class="ml-2 text-gray-700">eˣ</label>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Result Area -->
-            <div class="mt-8 bg-indigo-50 p-6 rounded-lg border border-indigo-200">
-                <h2 class="text-xl font-semibold text-gray-800 mb-4">Результаты вычислений</h2>
-                <div id="result-area" class="min-h-[100px] bg-white p-4 rounded-md border border-gray-300">
-                    <p class="text-gray-600 italic">Результаты будут отображаться здесь после нажатия кнопки "Пуск"</p>
-                </div>
-            </div>
-
-            <!-- Action Buttons -->
-            <div class="mt-8 flex flex-col sm:flex-row justify-center gap-4">
-                <button id="calculate-btn" class="px-8 py-3 bg-green-600 hover:bg-green-700 text-white font-semibold rounded-md shadow-md transition duration-300 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-opacity-50">
-                    Пуск
-                </button>
-                <button id="clear-btn" class="px-8 py-3 bg-red-600 hover:bg-red-700 text-white font-semibold rounded-md shadow-md transition duration-300 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-opacity-50">
-                    Очистить
-                </button>
-            </div>
-        </div>
-
-        <!-- Footer -->
-        <div class="bg-gray-100 p-4 text-center text-gray-600 text-sm">
-            <p>Программа вычисления функций по заданным условиям</p>
-        </div>
+<div class="max-w-6xl mx-auto bg-white rounded-xl shadow-lg overflow-hidden flex flex-col md:flex-row">
+  <!-- Header -->
+  <div class="bg-green-600 text-white p-6 md:w-1/3 flex flex-col justify-center items-center">
+    <h1 class="text-3xl font-bold mb-2 text-center">Личный учёт расходов</h1>
+    <p class="text-center opacity-90">Отслеживание расходов по категориям</p>
+  </div>
+  
+  <!-- Main Content -->
+  <div class="p-6 md:w-2/3 space-y-6">
+    <!-- Input Fields -->
+    <div class="bg-gray-50 p-6 rounded-lg border border-gray-200 flex flex-col md:flex-row md:space-x-4 space-y-4 md:space-y-0">
+      <div class="flex-1">
+        <label class="block text-sm font-medium text-gray-700 mb-1">Категория</label>
+        <select id="category" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500">
+          <option value="Food">Еда</option>
+          <option value="Transport">Транспорт</option>
+          <option value="Bills">Коммунальные</option>
+          <option value="Shopping">Покупки</option>
+          <option value="Others">Другое</option>
+        </select>
+      </div>
+      <div class="flex-1">
+        <label class="block text-sm font-medium text-gray-700 mb-1">Сумма</label>
+        <input type="number" id="amount" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500" placeholder="Введите сумму">
+      </div>
+      <div class="flex-1">
+        <label class="block text-sm font-medium text-gray-700 mb-1">Дата (ГГГГ-ММ-ДД)</label>
+        <input type="date" id="date" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500" value="<?= date('Y-m-d') ?>">
+      </div>
     </div>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const calculateBtn = document.getElementById('calculate-btn');
-            const clearBtn = document.getElementById('clear-btn');
-            const resultArea = document.getElementById('result-area');
+    <!-- Table of Expenses -->
+    <div class="overflow-x-auto">
+      <table class="min-w-full border border-gray-300 rounded-lg">
+        <thead class="bg-gray-200">
+          <tr>
+            <th class="border px-4 py-2">Категория</th>
+            <th class="border px-4 py-2">Сумма</th>
+            <th class="border px-4 py-2">Дата</th>
+            <th class="border px-4 py-2">Действия</th>
+          </tr>
+        </thead>
+        <tbody id="expense-table-body" class="bg-white"></tbody>
+      </table>
+    </div>
 
-            // Функция для вычисления математических функций
-            function calculateFunction(x, funcType) {
-                let result;
-                let description = '';
-                
-                // Вычисляем значение функции в зависимости от типа
-                switch(funcType) {
-                    case 'sinh':
-                        result = Math.sinh(x);
-                        description = `sh(${x})`;
-                        break;
-                    case 'square':
-                        result = Math.pow(x, 2);
-                        description = `(${x})²`;
-                        break;
-                    case 'exp':
-                        result = Math.exp(x);
-                        description = `e^${x}`;
-                        break;
-                    default:
-                        result = 0;
-                        description = 'Не определено';
-                }
-                
-                return { result, description };
-            }
+    <!-- Total and Buttons -->
+    <div class="flex justify-between items-center mt-4">
+      <div class="text-xl font-semibold text-gray-800" id="total-display">Итого: $0.0</div>
+      <div class="space-x-4">
+        <button id="add-btn" class="px-6 py-2 bg-green-600 hover:bg-green-700 text-white rounded-md shadow-md transition">Добавить</button>
+        <button id="delete-btn" class="px-6 py-2 bg-red-600 hover:bg-red-700 text-white rounded-md shadow-md transition">Удалить выбранное</button>
+      </div>
+    </div>
+  </div>
+</div>
 
-            // Реализация условий вычислений
-            function computeResults(x, y, funcType) {
-                const { result: f_x, description: desc_f_x } = calculateFunction(x, funcType);
-                
-                // Условие 1: если x - y = 0
-                if (x - y === 0) {
-                    const f_x_squared = Math.pow(f_x, 2);
-                    const y_squared = Math.pow(y, 2);
-                    const sin_y = Math.sin(y);
-                    const finalResult = f_x_squared + y_squared + sin_y;
-                    return {
-                        result: finalResult,
-                        formula: `${desc_f_x}² + ${y}² + sin(${y}) = ${f_x_squared.toFixed(2)} + ${y_squared.toFixed(2)} + ${sin_y.toFixed(2)} = ${finalResult.toFixed(2)}`,
-                        condition: "Условие: x - y = 0",
-                        description: "Вычисление по формуле: f(x²) + y² + sin(y)"
-                    };
-                }
-                // Условие 2: если x - y > 0
-                else if (x - y > 0) {
-                    const f_x_minus_y = f_x - y;
-                    const f_x_minus_y_squared = Math.pow(f_x_minus_y, 2);
-                    const cos_y = Math.cos(y);
-                    const finalResult = f_x_minus_y_squared + cos_y;
-                    return {
-                        result: finalResult,
-                        formula: `(${desc_f_x} - ${y})² + cos(${y}) = ${f_x_minus_y.toFixed(2)}² + ${cos_y.toFixed(2)} = ${f_x_minus_y_squared.toFixed(2)} + ${cos_y.toFixed(2)} = ${finalResult.toFixed(2)}`,
-                        condition: "Условие: x - y > 0",
-                        description: "Вычисление по формуле: (f(x) - y)² + cos(y)"
-                    };
-                }
-                // Условие 3: если x - y < 0
-                else {
-                    const y_minus_f_x = y - f_x;
-                    const y_minus_f_x_squared = Math.pow(y_minus_f_x, 2);
-                    const tan_y = Math.tan(y);
-                    const finalResult = y_minus_f_x_squared + tan_y;
-                    return {
-                        result: finalResult,
-                        formula: `(${y} - ${desc_f_x})² + tg(${y}) = ${y_minus_f_x.toFixed(2)}² + ${tan_y.toFixed(2)} = ${y_minus_f_x_squared.toFixed(2)} + ${tan_y.toFixed(2)} = ${finalResult.toFixed(2)}`,
-                        condition: "Условие: x - y < 0",
-                        description: "Вычисление по формуле: (y - f(x))² + tg(y)"
-                    };
-                }
-            }
+<!-- Script for logic -->
+<script>
+  const expenseList = [];
 
-            // Обработчик кнопки "Пуск"
-            calculateBtn.addEventListener('click', function() {
-                const xInput = document.getElementById('x-input').value;
-                const yInput = document.getElementById('y-input').value;
-                const selectedFunction = document.querySelector('input[name="function"]:checked');
+  const amountInput = document.getElementById('amount');
+  const categorySelect = document.getElementById('category');
+  const dateInput = document.getElementById('date');
+  const tableBody = document.getElementById('expense-table-body');
+  const totalDisplay = document.getElementById('total-display');
 
-                if (!xInput || !yInput) {
-                    resultArea.innerHTML = '<p class="text-red-600">Пожалуйста, заполните все поля ввода!</p>';
-                    return;
-                }
+  // Add Expense
+  document.getElementById('add-btn').addEventListener('click', () => {
+    const category = categorySelect.value;
+    const amountStr = amountInput.value.trim();
+    const date = dateInput.value;
 
-                if (!selectedFunction) {
-                    resultArea.innerHTML = '<p class="text-red-600">Пожалуйста, выберите функцию!</p>';
-                    return;
-                }
+    if (!amountStr || isNaN(amountStr) || parseFloat(amountStr) <= 0) {
+      alert('Пожалуйста, введите корректную сумму!');
+      return;
+    }
 
-                const x = parseFloat(xInput);
-                const y = parseFloat(yInput);
-                const funcType = selectedFunction.value;
+    const amount = parseFloat(amountStr);
+    const expense = { category, amount, date };
+    expenseList.push(expense);
+    addExpenseToTable(expense);
+    amountInput.value = '';
+    updateTotal();
+  });
 
-                // Вычисляем результат
-                const { result, formula, condition, description } = computeResults(x, y, funcType);
+  // Delete selected expense
+  document.getElementById('delete-btn').addEventListener('click', () => {
+    const selectedRow = document.querySelector('input[type="checkbox"]:checked');
+    if (!selectedRow) {
+      alert('Пожалуйста, выберите строку для удаления.');
+      return;
+    }
+    const row = selectedRow.closest('tr');
+    const index = Array.from(tableBody.children).indexOf(row);
+    expenseList.splice(index, 1);
+    row.remove();
+    updateTotal();
+  });
 
-                // Отображаем результат
-                resultArea.innerHTML = `
-                    <div class="space-y-3">
-                        <p><strong>Введенные значения:</strong></p>
-                        <ul class="list-disc pl-5 space-y-1">
-                            <li>X = ${x}</li>
-                            <li>Y = ${y}</li>
-                        </ul>
-                        <p><strong>Выбранная функция:</strong> ${funcType === 'sinh' ? 'sh(x)' : funcType === 'square' ? 'x²' : 'eˣ'}</p>
-                        <p><strong>${description}</strong></p>
-                        <p><strong>Условие:</strong> ${condition}</p>
-                        <p><strong>Формула вычисления:</strong></p>
-                        <p class="font-mono text-indigo-700">${formula}</p>
-                        <p class="text-xl font-bold text-green-600 mt-3">Результат: ${result.toFixed(4)}</p>
-                    </div>
-                `;
-            });
+  function addExpenseToTable(expense) {
+    const row = document.createElement('tr');
 
-            // Обработчик кнопки "Очистить"
-            clearBtn.addEventListener('click', function() {
-                document.getElementById('x-input').value = '';
-                document.getElementById('y-input').value = '';
-                document.querySelectorAll('input[name="function"]').forEach(radio => radio.checked = false);
-                resultArea.innerHTML = '<p class="text-gray-600 italic">Результаты будут отображаться здесь после нажатия кнопки "Пуск"</p>';
-            });
-        });
-    </script>
+    const cellCategory = document.createElement('td');
+    cellCategory.className = 'border px-4 py-2';
+    cellCategory.innerText = expense.category;
+    row.appendChild(cellCategory);
+
+    const cellAmount = document.createElement('td');
+    cellAmount.className = 'border px-4 py-2';
+    cellAmount.innerText = `$${expense.amount.toFixed(2)}`;
+    row.appendChild(cellAmount);
+
+    const cellDate = document.createElement('td');
+    cellDate.className = 'border px-4 py-2';
+    cellDate.innerText = expense.date;
+    row.appendChild(cellDate);
+
+    const cellAction = document.createElement('td');
+    cellAction.className = 'border px-4 py-2 text-center';
+    const checkbox = document.createElement('input');
+    checkbox.type = 'checkbox';
+    checkbox.className = 'mx-auto';
+    cellAction.appendChild(checkbox);
+    row.appendChild(cellAction);
+
+    tableBody.appendChild(row);
+  }
+
+  function updateTotal() {
+    let total = 0;
+    for (const exp of expenseList) {
+      total += exp.amount;
+    }
+    totalDisplay.innerText = `Итого: $${total.toFixed(2)}`;
+  }
+</script>
 </body>
 </html>
