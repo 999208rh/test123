@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>🏥 Clinic Appointment System</title>
+<style>
+  body {
+    background-color: #f5fff2;
+    font-family: Verdana, sans-serif;
+    margin: 0;
+    padding: 20px;
+  }
+  h1 {
+    font-size: 20px;
+    font-weight: bold;
+    text-align: center;
+  }
+  .container {
+    max-width: 600px;
+    margin: 0 auto;
+  }
+  label {
+    display: inline-block;
+    width: 120px;
+    margin-top: 10px;
+    font-weight: bold;
+  }
+  input, select {
+    width: calc(100% - 130px);
+    padding: 5px;
+    margin-top: 10px;
+  }
+  button {
+    margin-top: 20px;
+    width: 100%;
+    padding: 10px;
+    background-color: #66cdaa;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+  }
+  button:hover {
+    background-color: #55bfae;
+  }
+  #appointments {
+    margin-top: 20px;
+    max-height: 200px;
+    overflow-y: auto;
+    border: 1px solid #ccc;
+    padding: 10px;
+  }
+  #appointments ul {
+    list-style-type: none;
+    padding: 0;
+  }
+  #appointments li {
+    margin-bottom: 8px;
+  }
+</style>
+</head>
+<body>
+<div class="container">
+  <h1>📅 Book a Doctor's Appointment</h1>
+  <form id="appointmentForm" onsubmit="return false;">
+    <label>👤 Patient Name:</label>
+    <input type="text" id="name" required /><br/>
+    <label>🎂 Age:</label>
+    <input type="number" id="age" min="0" required /><br/>
+    <label>👨‍⚕️ Doctor:</label>
+    <select id="doctor">
+      <option>Dr. Sharma - Dentist</option>
+      <option>Dr. Mehta - Cardiologist</option>
+      <option>Dr. Roy - Pediatrician</option>
+    </select><br/>
+    <label>📆 Date:</label>
+    <input type="date" id="date" required /><br/>
+    <label>⏰ Time:</label>
+    <select id="time">
+      <option>10:00 AM</option>
+      <option>11:30 AM</option>
+      <option>2:00 PM</option>
+      <option>4:00 PM</option>
+    </select><br/>
+    <button type="button" onclick="bookAppointment()">✅ Book Appointment</button>
+  </form>
+  <div id="appointments">
+    <h3>📝 Appointments</h3>
+    <ul id="appointmentList"></ul>
+  </div>
+</div>
+
+<script>
+  const appointmentList = document.getElementById("appointmentList");
+
+  function bookAppointment() {
+    const name = document.getElementById("name").value.trim();
+    const age = document.getElementById("age").value.trim();
+    const doctor = document.getElementById("doctor").value;
+    const dateInput = document.getElementById("date").value;
+    const time = document.getElementById("time").value;
+
+    if (!name || !age || !dateInput) {
+      alert("Please fill in all fields!");
+      return;
+    }
+
+    const formattedDate = new Date(dateInput).toLocaleDateString();
+
+    const appointment = `🧾 ${name} (${age} yrs) with ${doctor} on ${formattedDate} at ${time}`;
+
+    const li = document.createElement("li");
+    li.textContent = appointment;
+    appointmentList.appendChild(li);
+
+    alert("Appointment Booked Successfully!");
+
+    document.getElementById("appointmentForm").reset();
+  }
+</script>
+</body>
+</html>
