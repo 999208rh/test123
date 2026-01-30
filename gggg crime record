@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Crime Record Management System</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    background-color: #fff0f0;
+    display: flex;
+    flex-direction: column;
+    margin: 0;
+    padding: 20px;
+  }
+  h1 {
+    text-align: center;
+    font-size: 24px;
+    font-weight: bold;
+    color: red;
+    margin-bottom: 10px;
+  }
+  .container {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+  }
+  .form-section {
+    flex: 1;
+    min-width: 250px;
+    background-color: #ffe0e0;
+    padding: 10px;
+    border-radius: 8px;
+  }
+  .form-section h2 {
+    text-align: center;
+    margin-bottom: 10px;
+  }
+  .form-group {
+    margin-bottom: 10px;
+  }
+  label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 4px;
+  }
+  input, select, button {
+    width: 100%;
+    padding: 6px;
+    box-sizing: border-box;
+  }
+  button {
+    margin-top: 10px;
+    background-color: #cc0000;
+    color: white;
+    border: none;
+    cursor: pointer;
+    font-size: 14px;
+    border-radius: 4px;
+  }
+  button:hover {
+    background-color: #990000;
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+  }
+  th, td {
+    border: 1px solid #990000;
+    padding: 8px;
+    text-align: center;
+  }
+  th {
+    background-color: #ff9999;
+  }
+  .bottom-controls {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 10px;
+  }
+</style>
+</head>
+<body>
+
+<h1>Crime Record Management System</h1>
+
+<div class="container">
+  <div class="form-section">
+    <h2>Add / Search Records</h2>
+    <div class="form-group">
+      <label for="crimeId">Crime ID:</label>
+      <input type="text" id="crimeId" />
+    </div>
+    <div class="form-group">
+      <label for="crimeType">Crime Type:</label>
+      <select id="crimeType">
+        <option>Theft</option>
+        <option>Murder</option>
+        <option>Fraud</option>
+        <option>Assault</option>
+        <option>Cybercrime</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label for="location">Location:</label>
+      <input type="text" id="location" />
+    </div>
+    <div class="form-group">
+      <label for="accused">Accused Name:</label>
+      <input type="text" id="accused" />
+    </div>
+    <div class="form-group">
+      <label for="officer">Officer In Charge:</label>
+      <input type="text" id="officer" />
+    </div>
+    <button onclick="addRecord()">Add Record</button>
+  </div>
+  <div class="form-section">
+    <h2>Search & Actions</h2>
+    <div class="form-group">
+      <label for="searchCrimeType">Search Crime Type:</label>
+      <input type="text" id="searchCrimeType" />
+    </div>
+    <div class="bottom-controls">
+      <button onclick="searchCrime()">Search</button>
+      <button onclick="showAllRecords()">Show All</button>
+      <button onclick="deleteSelected()">Delete Selected</button>
+    </div>
+  </div>
+</div>
+
+<table id="crimeTable">
+  <thead>
+    <tr>
+      <th>Select</th>
+      <th>ID</th>
+      <th>Crime Type</th>
+      <th>Location</th>
+      <th>Accused</th>
+      <th>Officer</th>
+    </tr>
+  </thead>
+  <tbody>
+    <!-- Data rows will go here -->
+  </tbody>
+</table>
+
+<script>
+  const crimeList = [];
+
+  function addRecord() {
+    const id = document.getElementById('crimeId').value.trim();
+    const crimeType = document.getElementById('crimeType').value;
+    const location = document.getElementById('location').value.trim();
+    const accused = document.getElementById('accused').value.trim();
+    const officer = document.getElementById('officer').value.trim();
+
+    if (!id || !location || !accused || !officer) {
+      alert('Please fill all fields.');
+      return;
+    }
+
+    const record = { id, crimeType, location, accusedName: accused, officer };
+    crimeList.push(record);
+    showAllRecords();
+
+    document.getElementById('crimeId').value = '';
+    document.getElementById('location').value = '';
+    document.getElementById('accused').value = '';
+    document.getElementById('officer').value = '';
+  }
+
+  function showAllRecords() {
+    const tbody = document.querySelector('#crimeTable tbody');
+    tbody.innerHTML = '';
+    crimeList.forEach(cr => {
+      const row = document.createElement('tr');
+      row.innerHTML = `
+        <td><input type="checkbox" class="selectCheckbox" data-id="${cr.id}"></td>
+        <td>${cr.id}</td>
+        <td>${cr.crimeType}</td>
+        <td>${cr.location}</td>
+        <td>${cr.accusedName}</td>
+        <td>${cr.officer}</td>
+      `;
+      tbody.appendChild(row);
+    });
+  }
+
+  function searchCrime() {
+    const searchTerm = document.getElementById('searchCrimeType').value.trim().toLowerCase();
+    const tbody = document.querySelector('#crimeTable tbody');
+    tbody.innerHTML = '';
+    crimeList.forEach(cr => {
+      if (cr.crimeType.toLowerCase() === searchTerm) {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+          <td><input type="checkbox" class="selectCheckbox" data-id="${cr.id}"></td>
+          <td>${cr.id}</td>
+          <td>${cr.crimeType}</td>
+          <td>${cr.location}</td>
+          <td>${cr.accusedName}</td>
+          <td>${cr.officer}</td>
+        `;
+        tbody.appendChild(row);
+      }
+    });
+  }
+
+  function deleteSelected() {
+    const checkboxes = document.querySelectorAll('.selectCheckbox:checked');
+    const idsToDelete = Array.from(checkboxes).map(cb => cb.dataset.id);
+    for (let i = crimeList.length - 1; i >= 0; i--) {
+      if (idsToDelete.includes(crimeList[i].id)) {
+        crimeList.splice(i, 1);
+      }
+    }
+    showAllRecords();
+  }
+
+  // Initialize with a sample record
+  crimeList.push({ id: 'C101', crimeType: 'Theft', location: 'NYC', accusedName: 'John Doe', officer: 'Officer Mark' });
+  showAllRecords();
+</script>
+
+</body>
+</html>
