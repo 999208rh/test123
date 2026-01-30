@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Gym Management System</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    background-color: #f0f0f0;
+    margin: 20px;
+  }
+  h1 {
+    text-align: center;
+    font-size: 24px;
+    font-weight: bold;
+    color: #0066cc;
+    margin-bottom: 10px;
+  }
+  .container {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+  }
+  .form-section {
+    background-color: #d0e0f0;
+    padding: 20px;
+    border-radius: 8px;
+    flex: 1;
+    min-width: 300px;
+  }
+  .form-section h2 {
+    text-align: center;
+    margin-bottom: 10px;
+  }
+  .form-group {
+    margin-bottom: 10px;
+  }
+  label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 4px;
+  }
+  input, select, button {
+    width: 100%;
+    padding: 6px;
+    box-sizing: border-box;
+  }
+  button {
+    margin-top: 10px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    cursor: pointer;
+    border-radius: 4px;
+  }
+  button:hover {
+    background-color: #0056b3;
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+  }
+  th, td {
+    border: 1px solid #007bff;
+    padding: 8px;
+    text-align: center;
+  }
+  th {
+    background-color: #cce5ff;
+  }
+  .bottom-buttons {
+    display: flex;
+    gap: 10px;
+    margin-top: 10px;
+  }
+</style>
+</head>
+<body>
+
+<h1>Gym Management System</h1>
+
+<div class="container">
+  <div class="form-section">
+    <h2>Add / Update Member</h2>
+    <div class="form-group">
+      <label for="memberId">ID:</label>
+      <input type="number" id="memberId" />
+    </div>
+    <div class="form-group">
+      <label for="memberName">Name:</label>
+      <input type="text" id="memberName" />
+    </div>
+    <div class="form-group">
+      <label for="memberAge">Age:</label>
+      <input type="number" id="memberAge" />
+    </div>
+    <div class="form-group">
+      <label for="membershipType">Membership Type:</label>
+      <select id="membershipType">
+        <option>Monthly</option>
+        <option>Quarterly</option>
+        <option>Yearly</option>
+      </select>
+    </div>
+    <button onclick="addMember()">Add Member</button>
+    <button onclick="updateMember()">Update Member</button>
+    <button onclick="clearFields()">Clear Fields</button>
+  </div>
+  <div class="form-section">
+    <h2>Actions</h2>
+    <div class="form-group">
+      <label for="searchName">Search by Name:</label>
+      <input type="text" id="searchName" />
+    </div>
+    <div class="bottom-buttons">
+      <button onclick="searchMember()">Search</button>
+      <button onclick="showAllMembers()">Show All</button>
+      <button onclick="deleteMember()">Delete Selected</button>
+    </div>
+  </div>
+</div>
+
+<table id="membersTable">
+  <thead>
+    <tr>
+      <th>Select</th>
+      <th>ID</th>
+      <th>Name</th>
+      <th>Age</th>
+      <th>Membership Type</th>
+    </tr>
+  </thead>
+  <tbody>
+    <!-- Members data will appear here -->
+  </tbody>
+</table>
+
+<script>
+  const members = [];
+  let selectedRowIndex = -1;
+
+  function addMember() {
+    const id = parseInt(document.getElementById('memberId').value);
+    const name = document.getElementById('memberName').value.trim();
+    const age = parseInt(document.getElementById('memberAge').value);
+    const membership = document.getElementById('membershipType').value;
+
+    if (isNaN(id) || !name || isNaN(age)) {
+      alert('Please enter valid values for ID and Age.');
+      return;
+    }
+
+    for (const m of members) {
+      if (m.id === id) {
+        alert('Member ID already exists!');
+        return;
+      }
+    }
+
+    const member = { id, name, age, membershipType: membership };
+    members.push(member);
+    showAllMembers();
+    clearFields();
+  }
+
+  function showAllMembers() {
+    const tbody = document.querySelector('#membersTable tbody');
+    tbody.innerHTML = '';
+    members.forEach((m, index) => {
+      const row = document.createElement('tr');
+      row.innerHTML = `
+        <td><input type="radio" name="selectMember" onclick="selectRow(${index})"></td>
+        <td>${m.id}</td>
+        <td>${m.name}</td>
+        <td>${m.age}</td>
+        <td>${m.membershipType}</td>
+      `;
+      tbody.appendChild(row);
+    });
+  }
+
+  function selectRow(index) {
+    selectedRowIndex = index;
+    const member = members[index];
+    document.getElementById('memberId').value = member.id;
+    document.getElementById('memberName').value = member.name;
+    document.getElementById('memberAge').value = member.age;
+    document.getElementById('membershipType').value = member.membershipType;
+    document.getElementById('memberId').disabled = true;
+  }
+
+  function updateMember() {
+    if (selectedRowIndex === -1) {
+      alert('Please select a member to update.');
+      return;
+    }
+    const name = document.getElementById('memberName').value.trim();
+    const age = parseInt(document.getElementById('memberAge').value);
+    const membership = document.getElementById('membershipType').value;
+    const id = parseInt(document.getElementById('memberId').value);
+
+    if (isNaN(age)) {
+      alert('Please enter a valid age.');
+      return;
+    }
+
+    const member = members[selectedRowIndex];
+    member.name = name;
+    member.age = age;
+    member.membershipType = membership;
+
+    showAllMembers();
+    clearFields();
+    document.getElementById('memberId').disabled = false;
+    selectedRowIndex = -1;
+  }
+
+  function deleteMember() {
+    if (selectedRowIndex === -1) {
+      alert('Please select a member to delete.');
+      return;
+    }
+    members.splice(selectedRowIndex, 1);
+    showAllMembers();
+    clearFields();
+    document.getElementById('memberId').disabled = false;
+    selectedRowIndex = -1;
+  }
+
+  function searchMember() {
+    const searchName = document.getElementById('searchName').value.trim().toLowerCase();
+    const tbody = document.querySelector('#membersTable tbody');
+    tbody.innerHTML = '';
+    members.forEach((m, index) => {
+      if (m.name.toLowerCase().includes(searchName)) {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+          <td><input type="radio" name="selectMember" onclick="selectRow(${index})"></td>
+          <td>${m.id}</td>
+          <td>${m.name}</td>
+          <td>${m.age}</td>
+          <td>${m.membershipType}</td>
+        `;
+        tbody.appendChild(row);
+      }
+    });
+  }
+
+  function clearFields() {
+    document.getElementById('memberId').value = '';
+    document.getElementById('memberName').value = '';
+    document.getElementById('memberAge').value = '';
+    document.getElementById('membershipType').selectedIndex = 0;
+    document.getElementById('memberId').disabled = false;
+  }
+
+  // Sample data
+  members.push({ id: 1, name: 'John Doe', age: 25, membershipType: 'Monthly' });
+  showAllMembers();
+</script>
+
+</body>
+</html>
