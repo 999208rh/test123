@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Encryption Tool</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    margin: 20px;
+    background-color: #f7f7f7;
+  }
+  h1 {
+    text-align: center;
+    margin-bottom: 20px;
+  }
+  .container {
+    max-width: 600px;
+    margin: auto;
+    padding: 15px;
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+  }
+  label {
+    display: block;
+    font-weight: bold;
+    margin-top: 10px;
+  }
+  textarea, input, select {
+    width: 100%;
+    padding: 8px;
+    box-sizing: border-box;
+    margin-top: 4px;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+  }
+  textarea {
+    resize: vertical;
+  }
+  .buttons {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 15px;
+  }
+  button {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    background-color: #007bff;
+    color: white;
+    cursor: pointer;
+  }
+  button:hover {
+    background-color: #0056b3;
+  }
+  #output {
+    margin-top: 20px;
+    padding: 10px;
+    min-height: 80px;
+    white-space: pre-wrap;
+    background-color: #e9ecef;
+    border-radius: 4px;
+  }
+</style>
+</head>
+<body>
+
+<h1>Encryption Tool</h1>
+<div class="container">
+  <label for="inputText">Enter Text:</label>
+  <textarea id="inputText" rows="4"></textarea>
+
+  <label for="keyInput">Key (number for Caesar, character for XOR):</label>
+  <input type="text" id="keyInput" />
+
+  <label for="methodSelect">Method:</label>
+  <select id="methodSelect">
+    <option value="caesar">Caesar Cipher</option>
+    <option value="xor">XOR Encryption</option>
+  </select>
+
+  <div class="buttons">
+    <button onclick="processText(true)">Encrypt</button>
+    <button onclick="processText(false)">Decrypt</button>
+  </div>
+
+  <h3>Result:</h3>
+  <div id="output"></div>
+</div>
+
+<script>
+  function processText(isEncrypt) {
+    const text = document.getElementById('inputText').value;
+    const keyText = document.getElementById('keyInput').value;
+    const method = document.getElementById('methodSelect').value;
+    let result = '';
+
+    if (method === 'caesar') {
+      const key = parseInt(keyText);
+      if (isNaN(key)) {
+        alert('Please enter a valid number for the Caesar cipher key.');
+        return;
+      }
+      result = caesarCipher(text, isEncrypt ? key : -key);
+    } else if (method === 'xor') {
+      if (keyText.length === 0) {
+        alert('Please enter a character for XOR encryption.');
+        return;
+      }
+      const keyChar = keyText.charAt(0);
+      result = xorCipher(text, keyChar);
+    }
+
+    document.getElementById('output').textContent = result;
+  }
+
+  function caesarCipher(text, shift) {
+    let result = '';
+    for (const c of text) {
+      if (/[a-zA-Z]/.test(c)) {
+        const base = c === c.toLowerCase() ? 'a'.charCodeAt(0) : 'A'.charCodeAt(0);
+        const offset = (c.charCodeAt(0) - base + shift + 26) % 26;
+        result += String.fromCharCode(base + offset);
+      } else {
+        result += c;
+      }
+    }
+    return result;
+  }
+
+  function xorCipher(text, keyChar) {
+    const keyCode = keyChar.charCodeAt(0);
+    let result = '';
+    for (const c of text) {
+      result += String.fromCharCode(c.charCodeAt(0) ^ keyCode);
+    }
+    return result;
+  }
+</script>
+
+</body>
+</html>
