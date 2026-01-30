@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Car Rental Management System</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    background-color: #f0f8ff;
+    margin: 20px;
+  }
+  h1 {
+    text-align: center;
+    font-size: 24px;
+    font-weight: bold;
+    color: #0066cc;
+    margin-bottom: 10px;
+  }
+  .container {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+  }
+  .form-section {
+    flex: 1;
+    min-width: 250px;
+    background-color: #e0f7fa;
+    padding: 10px;
+    border-radius: 8px;
+  }
+  .form-section h2 {
+    text-align: center;
+    margin-bottom: 10px;
+  }
+  .form-group {
+    margin-bottom: 10px;
+  }
+  label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 4px;
+  }
+  input, select, button {
+    width: 100%;
+    padding: 6px;
+    box-sizing: border-box;
+  }
+  button {
+    margin-top: 10px;
+    background-color: #00796b;
+    color: white;
+    border: none;
+    cursor: pointer;
+    font-size: 14px;
+    border-radius: 4px;
+  }
+  button:hover {
+    background-color: #004d40;
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+  }
+  th, td {
+    border: 1px solid #00796b;
+    padding: 8px;
+    text-align: center;
+  }
+  th {
+    background-color: #b2ebf2;
+  }
+  .bottom-controls {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 10px;
+  }
+</style>
+</head>
+<body>
+
+<h1>Car Rental Management System</h1>
+
+<div class="container">
+  <div class="form-section">
+    <h2>Add Rental</h2>
+    <div class="form-group">
+      <label for="carModel">Car Model:</label>
+      <input type="text" id="carModel" />
+    </div>
+    <div class="form-group">
+      <label for="carNumber">Car Number:</label>
+      <input type="text" id="carNumber" />
+    </div>
+    <div class="form-group">
+      <label for="customerName">Customer Name:</label>
+      <input type="text" id="customerName" />
+    </div>
+    <div class="form-group">
+      <label for="contact">Contact No.:</label>
+      <input type="text" id="contact" />
+    </div>
+    <div class="form-group">
+      <label for="days">Rental Days:</label>
+      <input type="text" id="days" />
+    </div>
+    <button onclick="addRental()">Add Rental</button>
+  </div>
+  <div class="form-section">
+    <h2>Search & Actions</h2>
+    <div class="form-group">
+      <label for="searchCustomer">Search Customer:</label>
+      <input type="text" id="searchCustomer" />
+    </div>
+    <div class="bottom-controls">
+      <button onclick="searchRental()">Search</button>
+      <button onclick="showAllRentals()">Show All</button>
+      <button onclick="deleteSelected()">Delete Selected</button>
+    </div>
+  </div>
+</div>
+
+<table id="rentalTable">
+  <thead>
+    <tr>
+      <th>Select</th>
+      <th>Car Model</th>
+      <th>Car No.</th>
+      <th>Customer</th>
+      <th>Contact</th>
+      <th>Days</th>
+    </tr>
+  </thead>
+  <tbody>
+    <!-- Rental data will appear here -->
+  </tbody>
+</table>
+
+<script>
+  const rentalList = [];
+
+  function addRental() {
+    const carModel = document.getElementById('carModel').value.trim();
+    const carNumber = document.getElementById('carNumber').value.trim();
+    const customer = document.getElementById('customerName').value.trim();
+    const contact = document.getElementById('contact').value.trim();
+    const days = document.getElementById('days').value.trim();
+
+    if (!carModel || !carNumber || !customer || !contact || !days) {
+      alert('Please fill all fields.');
+      return;
+    }
+
+    const rental = { carModel, carNumber, customerName: customer, contact, days };
+    rentalList.push(rental);
+    showAllRentals();
+
+    document.getElementById('carModel').value = '';
+    document.getElementById('carNumber').value = '';
+    document.getElementById('customerName').value = '';
+    document.getElementById('contact').value = '';
+    document.getElementById('days').value = '';
+  }
+
+  function showAllRentals() {
+    const tbody = document.querySelector('#rentalTable tbody');
+    tbody.innerHTML = '';
+    rentalList.forEach(r => {
+      const row = document.createElement('tr');
+      row.innerHTML = `
+        <td><input type="checkbox" class="selectCheckbox" data-car="${r.carNumber}"></td>
+        <td>${r.carModel}</td>
+        <td>${r.carNumber}</td>
+        <td>${r.customerName}</td>
+        <td>${r.contact}</td>
+        <td>${r.days}</td>
+      `;
+      tbody.appendChild(row);
+    });
+  }
+
+  function searchRental() {
+    const searchTerm = document.getElementById('searchCustomer').value.trim().toLowerCase();
+    const tbody = document.querySelector('#rentalTable tbody');
+    tbody.innerHTML = '';
+    rentalList.forEach(r => {
+      if (r.customerName.toLowerCase() === searchTerm) {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+          <td><input type="checkbox" class="selectCheckbox" data-car="${r.carNumber}"></td>
+          <td>${r.carModel}</td>
+          <td>${r.carNumber}</td>
+          <td>${r.customerName}</td>
+          <td>${r.contact}</td>
+          <td>${r.days}</td>
+        `;
+        tbody.appendChild(row);
+      }
+    });
+  }
+
+  function deleteSelected() {
+    const checkboxes = document.querySelectorAll('.selectCheckbox:checked');
+    const carNumbersToDelete = Array.from(checkboxes).map(cb => cb.dataset.car);
+    for (let i = rentalList.length - 1; i >= 0; i--) {
+      if (carNumbersToDelete.includes(rentalList[i].carNumber)) {
+        rentalList.splice(i, 1);
+      }
+    }
+    showAllRentals();
+  }
+
+  // Initialize with a sample rental
+  rentalList.push({ carModel: 'Honda Civic', carNumber: 'KA-02-BB-5678', customerName: 'Bob', contact: '9876543210', days: '5' });
+  showAllRentals();
+</script>
+
+</body>
+</html>
