@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Time Table Generator</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    background-color: #f0f8ff;
+    margin: 20px;
+  }
+  h1 {
+    text-align: center;
+    font-size: 24px;
+    font-weight: bold;
+    color: #0066cc;
+  }
+  .controls {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+    padding: 10px 20px;
+    background-color: #e0f7fa;
+    margin-bottom: 20px;
+  }
+  .controls label {
+    display: block;
+    margin-bottom: 5px;
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+  }
+  th, td {
+    border: 1px solid #00796b;
+    padding: 10px;
+    height: 30px;
+    text-align: center;
+  }
+  th {
+    background-color: #b2dfdb;
+  }
+  .button-container {
+    text-align: center;
+  }
+  button {
+    padding: 10px 20px;
+    background-color: #00796b;
+    color: white;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+  }
+  button:hover {
+    background-color: #004d40;
+  }
+</style>
+</head>
+<body>
+
+<h1>Weekly Time Table Generator</h1>
+
+<div class="controls">
+  <div>
+    <label for="daySelect">Select Day:</label>
+    <select id="daySelect">
+      <option>Monday</option>
+      <option>Tuesday</option>
+      <option>Wednesday</option>
+      <option>Thursday</option>
+      <option>Friday</option>
+    </select>
+  </div>
+  <div>
+    <label for="periodSelect">Select Period:</label>
+    <select id="periodSelect">
+      <option>1</option>
+      <option>2</option>
+      <option>3</option>
+      <option>4</option>
+      <option>5</option>
+      <option>6</option>
+      <option>7</option>
+    </select>
+  </div>
+  <div>
+    <label for="subjectSelect">Select Subject:</label>
+    <select id="subjectSelect">
+      <option>Math</option>
+      <option>Science</option>
+      <option>History</option>
+      <option>English</option>
+      <option>Computer</option>
+    </select>
+  </div>
+  <div>
+    <label for="teacherSelect">Select Teacher:</label>
+    <select id="teacherSelect">
+      <option>Mr. A</option>
+      <option>Ms. B</option>
+      <option>Mr. C</option>
+      <option>Ms. D</option>
+    </select>
+  </div>
+</div>
+
+<div class="button-container">
+  <button onclick="assignSubject()">Assign</button>
+</div>
+
+<table id="timetable">
+  <thead>
+    <tr>
+      <th>Day</th>
+      <th>Period 1</th>
+      <th>Period 2</th>
+      <th>Period 3</th>
+      <th>Period 4</th>
+      <th>Period 5</th>
+      <th>Period 6</th>
+      <th>Period 7</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr data-day="Monday">
+      <td>Monday</td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+    </tr>
+    <tr data-day="Tuesday">
+      <td>Tuesday</td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+    </tr>
+    <tr data-day="Wednesday">
+      <td>Wednesday</td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+    </tr>
+    <tr data-day="Thursday">
+      <td>Thursday</td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+    </tr>
+    <tr data-day="Friday">
+      <td>Friday</td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+    </tr>
+  </tbody>
+</table>
+
+<script>
+  function assignSubject() {
+    const daySelect = document.getElementById('daySelect');
+    const periodSelect = document.getElementById('periodSelect');
+    const subjectSelect = document.getElementById('subjectSelect');
+    const teacherSelect = document.getElementById('teacherSelect');
+
+    const selectedDay = daySelect.value;
+    const selectedPeriod = parseInt(periodSelect.value); // 1-based
+    const subject = subjectSelect.value;
+    const teacher = teacherSelect.value;
+
+    const table = document.getElementById('timetable');
+    const tbody = table.tBodies[0];
+
+    // Find the row for the selected day
+    const dayRow = Array.from(tbody.rows).find(row => row.dataset.day === selectedDay);
+
+    if (dayRow) {
+      // Periods are in columns 1-7 (index 1-7)
+      dayRow.cells[selectedPeriod].innerText = `${subject} (${teacher})`;
+    }
+  }
+</script>
+
+</body>
+</html>
